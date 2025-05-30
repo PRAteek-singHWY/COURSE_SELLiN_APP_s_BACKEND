@@ -1,0 +1,3 @@
+empty js project -> npm init -y
+entry point file intilisation -> vi index.js
+starting appplication -> node index.js
