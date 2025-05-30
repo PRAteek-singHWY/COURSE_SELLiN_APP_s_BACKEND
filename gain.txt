@@ -1,3 +1,12 @@
 empty js project -> npm init -y
 entry point file intilisation -> vi index.js
 starting appplication -> node index.js
+
+
+BETTING
+DISTERIOUS (WANDR)
+PODCAST (PLATFORM)
+3 ready
+
+August -> CP
+CM, INNOVATION LAB, GSOC, PAID INTERNSHIP
