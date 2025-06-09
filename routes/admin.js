@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const adminRouter = Router();
 
+const adminModel = require("../db")
 // adminRouter.udse(adminMiddleware);
 
 // admin signup

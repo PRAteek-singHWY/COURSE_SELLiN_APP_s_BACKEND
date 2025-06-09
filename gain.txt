@@ -10,3 +10,8 @@ PODCAST (PLATFORM)
 
 August -> CP
 CM, INNOVATION LAB, GSOC, PAID INTERNSHIP
+
+
+The ref should be the name of the Mongoose model, not the schema variable name.
+
+

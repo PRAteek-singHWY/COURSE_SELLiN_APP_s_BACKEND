@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const courseRouter = Router();
-
+const courseModel = require("../db");
 // Get all available courses (prview available courses)
 courseRouter.get("/preview", (req, res) => {
   res.json({
