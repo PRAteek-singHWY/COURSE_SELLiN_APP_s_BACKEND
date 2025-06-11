@@ -8,7 +8,16 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const userSchema = new Schema({
   //    id (automatically added by MongoDB as _id of type ObjectId)
-
+  firstName: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    unique: false,
+  },
   email: {
     type: String,
     required: true,
@@ -20,20 +29,20 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 8,
-  },
-  firstName: {
-    type: String,
-    required: true,
-    unique: false,
-  },
-  lastName: {
-    type: String,
-    required: true,
-    unique: false,
   },
 });
 
 const adminSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    unique: false,
+  },
   email: {
     type: String,
     required: true,
@@ -45,16 +54,6 @@ const adminSchema = new Schema({
     type: String,
     required: true,
     minlength: 8,
-  },
-  firstName: {
-    type: String,
-    required: true,
-    unique: false,
-  },
-  lastName: {
-    type: String,
-    required: true,
-    unique: false,
   },
 });
 
@@ -86,9 +85,11 @@ const adminModel = mongoose.model("admin", adminSchema);
 const courseModel = mongoose.model("course", courseSchema);
 const purchaseModel = mongoose.model("purchase", purchaseSchema);
 
-module.export = {
+module.exports = {
   userModel,
   adminModel,
   courseModel,
   purchaseModel,
 };
+
+
