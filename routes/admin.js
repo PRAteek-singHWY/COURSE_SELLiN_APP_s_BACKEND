@@ -5,9 +5,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
 const { adminModel } = require("../db");
+const { courseModel } = require("../db");
 
 const adminRouter = Router();
-
+const { adminMiddleWare } = require("../middleware/admin");
 // adminRouter.udse(adminMiddleware);
 
 // bcrypt library (hashing passwords)
@@ -162,9 +163,20 @@ adminRouter.post("/signin", async (req, res) => {
 //
 
 // admin course creation
-adminRouter.post("/course", (req, res) => {
+adminRouter.post("/course", adminMiddleWare, async (req, res) => {
+  const adminId = req.adminId;
+  const { title, description, imageUrl, price } = req.body;
+  const course = await courseModel.create({
+    title: title,
+    description: description,
+    imageUrl: imageUrl,
+    price: price,
+    creatorId: adminId,
+  });
+
   res.json({
-    message: "signup endpoint",
+    message: "Course ccreated",
+    courseId: course._id,
   });
 });
 
