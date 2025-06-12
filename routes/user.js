@@ -57,12 +57,15 @@ userRouter.post("/signup", async (req, res) => {
       email,
       password: hashedPassword,
     });
-console.log("Saving new user...");
-await newUser.save();
-console.log("User saved successfully.");
+    console.log("Saving new user...");
+    await newUser.save();
+    console.log("User saved successfully.");
 
     // await newUser.save();
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(
+      { userId: newUser._id },
+      process.env.JWT_SECRET_KEY_USER
+    );
 
     res.status(201).json({
       message: "User registered Successfully",

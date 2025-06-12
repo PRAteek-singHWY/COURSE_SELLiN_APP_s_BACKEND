@@ -72,7 +72,7 @@ adminRouter.post("/signup", async (req, res) => {
     await newAdmin.save();
     const token = jwt.sign(
       { adminId: newAdmin._id },
-      process.env.JWT_SECRET_KEY
+      process.env.JWT_SECRET_KEY_ADMIN
     );
 
     res.status(201).json({
