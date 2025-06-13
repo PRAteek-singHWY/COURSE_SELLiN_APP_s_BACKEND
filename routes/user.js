@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
 const { userModel } = require("../db");
+const { purchaseModel } = require("../db");
+const { courseModel } = require("../db");
 
 // User signup route
 
@@ -140,8 +142,23 @@ userRouter.post("/login", async (req, res) => {
 
 // middleware
 // to view the courses purchased by user
-userRouter.post("/purchases", (req, res) => {
-  res.send("Course purchased endpoint");
+userRouter.post("/purchases", async (req, res) => {
+  const userId = req.userId;
+  const { courseId } = req.body;
+
+  try {
+    const course = await courseModel.findOne(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    const purchase = await purchaseModel.create({
+      courseId: course._id,
+      userId: userId,
+    });
+    res.json({ message: "purchased successfully", purchaseId: purchase._id });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
 });
 
 module.exports = userRouter; // <-- THIS exports the router

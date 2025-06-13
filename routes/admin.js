@@ -8,7 +8,7 @@ const { adminModel } = require("../db");
 const { courseModel } = require("../db");
 
 const adminRouter = Router();
-const { adminMiddleWare } = require("../middleware/admin");
+const adminMiddleWare = require("../middleware/admin");
 // adminRouter.udse(adminMiddleware);
 
 // bcrypt library (hashing passwords)
@@ -181,16 +181,38 @@ adminRouter.post("/course", adminMiddleWare, async (req, res) => {
 });
 
 // admin updating the course
-adminRouter.put("/course", (req, res) => {
+adminRouter.put("/course", adminMiddleWare, async (req, res) => {
+  // const adminId = req.adminId;
+  const { title, description, imageUrl, price, courseId } = req.body;
+  const course = await courseModel.updateOne(
+    {
+      _id: courseId,
+      creatorId: adminId,
+    },
+    {
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      price: price,
+    }
+  );
+
   res.json({
-    message: "update the course",
+    message: "Course uupdated",
+    courseId: course._id,
   });
 });
 
 // admin getting all the courses in bulk
-adminRouter.put("/course/bulk", (req, res) => {
+adminRouter.get("/course/bulk", adminMiddleWare, async (req, res) => {
+  const { userId } = req.body;
+  const adminId = userId;
+  const courses = await courseModel.find({
+    creatorId: adminId,
+  });
   res.json({
-    message: "getting all launched courses",
+    message: "all courses fetched",
+    courses,
   });
 });
 
