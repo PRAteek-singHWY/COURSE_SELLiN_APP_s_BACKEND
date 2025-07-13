@@ -8,7 +8,7 @@ const { adminModel } = require("../db");
 const { courseModel } = require("../db");
 
 const adminRouter = Router();
-const adminMiddleWare = require("../middleware/admin");
+const { adminMiddleWare } = require("../middleware/admin");
 // adminRouter.udse(adminMiddleware);
 
 // bcrypt library (hashing passwords)
@@ -71,9 +71,19 @@ adminRouter.post("/signup", async (req, res) => {
     });
 
     await newAdmin.save();
+
+    // const newAdmin = await adminModel.create({
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   password: hashedPassword,
+    // });
+
     const token = jwt.sign(
       { adminId: newAdmin._id },
-      process.env.JWT_SECRET_KEY_ADMIN
+      process.env.JWT_SECRET_KEY_ADMIN,
+      // if you want the token to expire
+      { expiresIn: "1h" }
     );
 
     res.status(201).json({
@@ -120,7 +130,7 @@ adminRouter.post("/signin", async (req, res) => {
   try {
     const existingAdmin = await adminModel.findOne({ email });
     if (!existingAdmin) {
-      res.status(400).json({ message: "User Not Registered" });
+      return res.status(400).json({ message: "User Not Registered" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -133,7 +143,7 @@ adminRouter.post("/signin", async (req, res) => {
     }
     const token = jwt.sign(
       { adminId: existingAdmin._id },
-      process.env.JWT_SECRET_KEY
+      process.env.JWT_SECRET_KEY_ADMIN
     );
 
     res.status(200).json({
@@ -141,7 +151,8 @@ adminRouter.post("/signin", async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json();
+    console.error("Signin error:", error); // Helpful for debugging
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 
   // res.json({
@@ -181,8 +192,8 @@ adminRouter.post("/course", adminMiddleWare, async (req, res) => {
 });
 
 // admin updating the course
-adminRouter.put("/course", adminMiddleWare, async (req, res) => {
-  // const adminId = req.adminId;
+adminRouter.put("/course_update", adminMiddleWare, async (req, res) => {
+  const adminId = req.adminId;
   const { title, description, imageUrl, price, courseId } = req.body;
   const course = await courseModel.updateOne(
     {
@@ -198,15 +209,15 @@ adminRouter.put("/course", adminMiddleWare, async (req, res) => {
   );
 
   res.json({
-    message: "Course uupdated",
+    message: "Course updated",
     courseId: course._id,
   });
 });
 
 // admin getting all the courses in bulk
 adminRouter.get("/course/bulk", adminMiddleWare, async (req, res) => {
-  const { userId } = req.body;
-  const adminId = userId;
+  // const { userId } = req.body;
+  const adminId = req.userId;
   const courses = await courseModel.find({
     creatorId: adminId,
   });

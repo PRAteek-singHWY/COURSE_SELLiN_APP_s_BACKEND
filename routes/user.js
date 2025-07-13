@@ -1,12 +1,13 @@
 const { Router } = require("express");
 require("dotenv").config();
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
 const { userModel } = require("../db");
 const { purchaseModel } = require("../db");
 const { courseModel } = require("../db");
-
+const { userMiddleWare } = require("../middleware/ user");
 // User signup route
 
 const userRouter = Router();
@@ -126,7 +127,7 @@ userRouter.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { userId: existingUser._id },
-      process.env.JWT_SECRET_KEY
+      process.env.JWT_SECRET_KEY_USER
     );
 
     res.status(200).json({
@@ -141,15 +142,15 @@ userRouter.post("/login", async (req, res) => {
 });
 
 // middleware
-// to view the courses purchased by user
-userRouter.post("/purchases", async (req, res) => {
+// to make a purchase by the user
+userRouter.post("/purchases", userMiddleWare, async (req, res) => {
   const userId = req.userId;
   const { courseId } = req.body;
 
   try {
-    const course = await courseModel.findOne(courseId);
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+    const course = await purchaseModel.findOne(courseId);
+    if (course) {
+      return res.status(404).json({ message: "Course already purchased" });
     }
     const purchase = await purchaseModel.create({
       courseId: course._id,
