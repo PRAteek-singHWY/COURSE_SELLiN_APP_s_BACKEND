@@ -7,7 +7,7 @@ const userMiddleWare = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY_USER);
     if (decoded) {
-      req.userId = decoded.id;
+      req.userId = decoded.userId;
       next();
     }
   } catch (err) {

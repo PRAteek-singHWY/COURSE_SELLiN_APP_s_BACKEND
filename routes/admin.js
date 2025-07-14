@@ -172,7 +172,7 @@ adminRouter.post("/signin", async (req, res) => {
 //
 
 //
-
+// 6873e8dbf03f4201caf36d51
 // admin course creation
 adminRouter.post("/course", adminMiddleWare, async (req, res) => {
   const adminId = req.adminId;
@@ -192,7 +192,7 @@ adminRouter.post("/course", adminMiddleWare, async (req, res) => {
 });
 
 // admin updating the course
-adminRouter.put("/course_update", adminMiddleWare, async (req, res) => {
+adminRouter.put("/course", adminMiddleWare, async (req, res) => {
   const adminId = req.adminId;
   const { title, description, imageUrl, price, courseId } = req.body;
   const course = await courseModel.updateOne(
@@ -207,15 +207,20 @@ adminRouter.put("/course_update", adminMiddleWare, async (req, res) => {
       price: price,
     }
   );
+  if (course.matchedCount === 0) {
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to update this course" });
+  }
 
   res.json({
-    message: "Course updated",
+    message: "Course updated successfully",
     courseId: course._id,
   });
 });
 
 // admin getting all the courses in bulk
-adminRouter.get("/course/bulk", adminMiddleWare, async (req, res) => {
+adminRouter.get("/course", adminMiddleWare, async (req, res) => {
   // const { userId } = req.body;
   const adminId = req.userId;
   const courses = await courseModel.find({

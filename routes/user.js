@@ -142,24 +142,20 @@ userRouter.post("/login", async (req, res) => {
 });
 
 // middleware
-// to make a purchase by the user
+// to see all the purchases made by a user
+
 userRouter.post("/purchases", userMiddleWare, async (req, res) => {
   const userId = req.userId;
-  const { courseId } = req.body;
 
   try {
-    const course = await purchaseModel.findOne(courseId);
-    if (course) {
-      return res.status(404).json({ message: "Course already purchased" });
-    }
-    const purchase = await purchaseModel.create({
-      courseId: course._id,
+    const purchases = await purchaseModel.find({
       userId: userId,
     });
-    res.json({ message: "purchased successfully", purchaseId: purchase._id });
-  } catch (err) {
-    res.status(500).json({ message: "Server Error", error: err.message });
-  }
+    return res.status(200).json({
+      message: "purchased courses fetched successfully",
+      purchases,
+    });
+  } catch (err) {}
 });
 
 module.exports = userRouter; // <-- THIS exports the router

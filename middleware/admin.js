@@ -7,7 +7,7 @@ const adminMiddleWare = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY_ADMIN);
     if (decoded) {
-      req.adminId = decoded.id;
+      req.adminId = decoded.adminId;
       next();
     }
   } catch (err) {
@@ -15,7 +15,6 @@ const adminMiddleWare = (req, res, next) => {
       message: "You are not signed in",
     });
   }
-
   //   else{
   //     res.status(403).json({
   //         message:"You are not signed in "
