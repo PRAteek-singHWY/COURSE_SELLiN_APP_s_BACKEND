@@ -69,21 +69,22 @@ const courseSchema = new Schema({
 const purchaseSchema = new Schema({
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "courseModel",
+    ref: "Courses",
   },
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userModel",
+    // ref needs to have the model name which we gave for database (like we see user,admin,purchase,course) so taht name
+    ref: "Users",
   },
 });
 
 // A model is created from a schema and is used to interact with the database.
 
-const userModel = mongoose.model("user", userSchema);
-const adminModel = mongoose.model("admin", adminSchema);
-const courseModel = mongoose.model("course", courseSchema);
-const purchaseModel = mongoose.model("purchase", purchaseSchema);
+const userModel = mongoose.model("Users", userSchema);
+const adminModel = mongoose.model("Admins", adminSchema);
+const courseModel = mongoose.model("Courses", courseSchema);
+const purchaseModel = mongoose.model("Purchases", purchaseSchema);
 
 module.exports = {
   userModel,
@@ -91,5 +92,3 @@ module.exports = {
   courseModel,
   purchaseModel,
 };
-
-

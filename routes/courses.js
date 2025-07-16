@@ -1,13 +1,18 @@
 const { Router } = require("express");
 const courseRouter = Router();
-const courseModel = require("../db");
+const { courseModel, purchaseModel } = require("../db");
 const { userMiddleWare } = require("../middleware/ user");
 const { adminMiddleWare } = require("../middleware/admin");
 
-const purchaseModel = require("../db");
+console.log("purchaseModel:", typeof purchaseModel);
+console.log("purchaseModel keys:", Object.keys(purchaseModel));
+console.log("typeof purchaseModel.findOne:", typeof purchaseModel.findOne);
+
 // Get all available courses (prview available courses)
 courseRouter.get("/preview", async (req, res) => {
   // show all the courses in courseschema
+  
+
   try {
     const courses = await courseModel.find({});
     return res.status(200).json({
@@ -36,7 +41,8 @@ courseRouter.post("/purchase", userMiddleWare, async (req, res) => {
         .status(404)
         .json({ message: "You're already enrolled in this course" });
     }
-    //  check if the user has actually paid the price
+    //  check if the user has actually paid the price'
+    // saving it to db in purhase model
     const purchase = await purchaseModel.create({
       courseId: courseId,
       userId: userId,

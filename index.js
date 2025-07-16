@@ -1,4 +1,5 @@
 const express = require("express");
+const { userModel, adminModel, courseModel, purchaseModel } = require("./db"); // ✅ This is the required step
 const mongoose = require("mongoose");
 require("dotenv").config();
 

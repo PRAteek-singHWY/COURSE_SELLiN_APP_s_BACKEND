@@ -151,11 +151,19 @@ userRouter.post("/purchases", userMiddleWare, async (req, res) => {
     const purchases = await purchaseModel.find({
       userId: userId,
     });
+    if (purchases.length === 0) {
+      return res.status(403).json({
+        message:
+          "You are not authorized to access this content because no purchases were found",
+      });
+    }
     return res.status(200).json({
       message: "purchased courses fetched successfully",
       purchases,
     });
-  } catch (err) {}
+  } catch (err) {
+    res.status(500).json({ message: "Failed to Get User Purchases" });
+  }
 });
 
 module.exports = userRouter; // <-- THIS exports the router
